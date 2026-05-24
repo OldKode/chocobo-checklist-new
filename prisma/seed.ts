@@ -1,7 +1,7 @@
 import { config as loadEnv } from "dotenv";
 
-loadEnv({ path: ".env.local", override: true });
-loadEnv();
+loadEnv({ path: ".env.local", override: true, quiet: true });
+loadEnv({ quiet: true });
 
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { JobGroup, PrismaClient, TaskCategory, TaskPriority, TaskType } from "@prisma/client";

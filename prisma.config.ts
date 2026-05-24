@@ -1,8 +1,8 @@
 import { config as loadEnv } from "dotenv";
 import { defineConfig } from "prisma/config";
 
-loadEnv({ path: ".env.local", override: true });
-loadEnv();
+loadEnv({ path: ".env.local", override: true, quiet: true });
+loadEnv({ quiet: true });
 
 const cliDatabaseUrl =
   process.env.DIRECT_URL ??
