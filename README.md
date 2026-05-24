@@ -24,7 +24,7 @@ Tracker pessoal para tarefas diarias e semanais de Final Fantasy XIV, focado em 
    NEXT_PUBLIC_APP_URL="http://localhost:3000"
    ```
 
-5. Rode `npm run db:migrate -- --name init` para criar/aplicar as tabelas no banco
+5. Rode `npx prisma migrate deploy` para aplicar a migration inicial versionada no banco
 6. Rode `npm run db:seed` para popular as tasks iniciais
 7. Rode `npm run dev`
 
@@ -52,7 +52,7 @@ Tracker pessoal para tarefas diarias e semanais de Final Fantasy XIV, focado em 
 - `npm run build` - gera o client Prisma, roda `prisma migrate deploy` e builda o app
 - `npm run test` - roda os testes da logica de reset
 - `npm run db:push` - sincroniza o schema com o banco configurado
-- `npm run db:migrate -- --name nome_da_migration` - cria uma migration versionada
+- `npm run db:migrate -- --name nome_da_migration` - cria uma nova migration versionada em ambiente local
 - `npm run db:seed` - popula tasks e settings sem duplicar dados
 - `npm run db:studio` - abre o Prisma Studio
 
