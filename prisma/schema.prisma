@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum TaskType {
+  DAILY
+  WEEKLY
+}
+
+enum TaskCategory {
+  ROULETTE
+  BEAST_TRIBE
+  HUNT
+  GRAND_COMPANY
+  CHALLENGE_LOG
+  CRAFTING
+  OTHER
+}
+
+enum TaskPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum JobGroup {
+  TANK
+  CRAFTER_GATHERER
+}
+
+model Task {
+  id                    String       @id @default(cuid())
+  slug                  String       @unique
+  name                  String
+  description           String
+  type                  TaskType
+  category              TaskCategory
+  minLevel              Int          @default(1)
+  xpReward              Int          @default(0)
+  goldReward            Int          @default(0)
+  tomestones            Int          @default(0)
+  seals                 Int          @default(0)
+  unlocked              Boolean      @default(true)
+  unlockHint            String?
+  infoUrl               String       @default("#")
+  priority              TaskPriority @default(MEDIUM)
+  requiredJobGroup      JobGroup?
+  adventurerInNeedBonus Boolean      @default(false)
+  completions           Completion[]
+  statusEntries         TaskStatus[]
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+}
+
+model Completion {
+  id          String   @id @default(cuid())
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  completedAt DateTime @default(now())
+  resetPeriod String
+
+  @@unique([taskId, resetPeriod])
+}
+
+model TaskStatus {
+  id          String   @id @default(cuid())
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  resetPeriod String
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  updatedAt   DateTime @updatedAt
+
+  @@unique([taskId, resetPeriod])
+}
+
+model UserSettings {
+  id           String   @id @default("singleton")
+  currentLevel Int      @default(58)
+  currentJob   String   @default("Warrior")
+  timezone     String   @default("America/Sao_Paulo")
+  updatedAt    DateTime @updatedAt
+}
