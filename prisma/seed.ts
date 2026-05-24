@@ -1,12 +1,17 @@
+import "dotenv/config";
+
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { JobGroup, PrismaClient, TaskCategory, TaskPriority, TaskType } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
+const adapter = new PrismaBetterSqlite3({ url: connectionString });
+const prisma = new PrismaClient({ adapter });
 
 const tasks = [
   {
     slug: "duty-roulette-leveling",
     name: "Duty Roulette: Leveling",
-    description: "Grande pico de XP para subir o Warrior e ajudar a manter filas rápidas como tank.",
+    description: "Grande pico de XP para subir o Warrior e ajudar a manter filas rapidas como tank.",
     type: TaskType.DAILY,
     category: TaskCategory.ROULETTE,
     minLevel: 16,
@@ -24,7 +29,7 @@ const tasks = [
   {
     slug: "duty-roulette-trials",
     name: "Duty Roulette: Trials",
-    description: "Boa XP e tomestones, já disponível no seu progresso de patch 2.x.",
+    description: "Boa XP e tomestones, ja disponivel no seu progresso de patch 2.x.",
     type: TaskType.DAILY,
     category: TaskCategory.ROULETTE,
     minLevel: 50,

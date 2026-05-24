@@ -82,7 +82,7 @@ export function TaskCard({ task, settings, isPending, onToggle }: TaskCardProps)
             {lockReason ? lockReason : "Disponivel neste reset atual."}
           </p>
           <Button asChild variant="link" size="sm">
-            <Link href={task.infoUrl}>Como fazer?</Link>
+            <a href={task.infoUrl}>Como fazer?</a>
           </Button>
         </div>
       </CardContent>

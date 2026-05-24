@@ -120,7 +120,7 @@ export function TrackerDashboard({ snapshot }: TrackerDashboardProps) {
                     <Link href="/dailies">Ver na lista</Link>
                   </Button>
                   <Button asChild variant="ghost" size="sm">
-                    <Link href={task.infoUrl}>Como fazer?</Link>
+                    <a href={task.infoUrl}>Como fazer?</a>
                   </Button>
                 </div>
               </CardContent>
