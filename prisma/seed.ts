@@ -1,10 +1,15 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
 
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+loadEnv({ path: ".env.local", override: true });
+loadEnv();
+
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { JobGroup, PrismaClient, TaskCategory, TaskPriority, TaskType } from "@prisma/client";
 
-const connectionString = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
-const adapter = new PrismaBetterSqlite3({ url: connectionString });
+const connectionString =
+  process.env.DATABASE_URL ??
+  "postgresql://placeholder:placeholder@127.0.0.1:5432/chocobo?sslmode=require";
+const adapter = new PrismaNeon({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 const tasks = [
@@ -280,8 +285,8 @@ const tasks = [
   },
 ] as const;
 
-async function main() {
-  await prisma.userSettings.upsert({
+async function ensureSettings() {
+  return prisma.userSettings.upsert({
     where: { id: "singleton" },
     update: {
       currentLevel: 58,
@@ -295,6 +300,10 @@ async function main() {
       timezone: "America/Sao_Paulo",
     },
   });
+}
+
+async function main() {
+  await ensureSettings();
 
   for (const task of tasks) {
     await prisma.task.upsert({

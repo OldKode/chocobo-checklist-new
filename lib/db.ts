@@ -1,10 +1,15 @@
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 
-const connectionString = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
+function getDatabaseUrl() {
+  return (
+    process.env.DATABASE_URL ??
+    "postgresql://placeholder:placeholder@127.0.0.1:5432/chocobo?sslmode=require"
+  );
+}
 
 function createPrismaClient() {
-  const adapter = new PrismaBetterSqlite3({ url: connectionString });
+  const adapter = new PrismaNeon({ connectionString: getDatabaseUrl() });
   return new PrismaClient({ adapter });
 }
 
@@ -13,8 +18,18 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-export const prisma = global.prisma ?? createPrismaClient();
+function getPrismaClient() {
+  if (!global.prisma) {
+    global.prisma = createPrismaClient();
+  }
 
-if (process.env.NODE_ENV !== "production") {
-  global.prisma = prisma;
+  return global.prisma;
 }
+
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, property, receiver) {
+    const client = getPrismaClient();
+    const value = Reflect.get(client, property, receiver);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});
